@@ -33,7 +33,7 @@
       <div class="col-5 offset-3">
         <q-checkbox
           left-label
-          v-model="left"
+          v-model="isIndex"
           label="Display indices:"
           size="sm"
         />
@@ -53,15 +53,23 @@
       class="text-h4 text-weight-thin text-grey cell q-px-lg text-center"
     >
       <div>λ</div>
-      <div class="text-subtitle2">{{ index }}</div>
+      <div v-if="isIndex && tapeDirection === 'oneWay'" class="text-subtitle2">
+        {{ index }}
+      </div>
+      <div
+        v-else-if="isIndex && tapeDirection === 'twoWay'"
+        class="text-subtitle2"
+      >
+        {{ index - Math.floor(maxSize / 2) }}
+      </div>
     </div>
   </q-virtual-scroll>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 
-const maxSize = 100;
+const maxSize = 101;
 const heavyList = [];
 
 for (let i = 0; i < maxSize; i++) {
@@ -71,15 +79,23 @@ for (let i = 0; i < maxSize; i++) {
 }
 const virtualScroll = ref(null);
 const tapeDirection = ref("oneWay");
-const left = ref(true);
+const isIndex = ref(true);
 
 onMounted(() => {
-  virtualScroll.value.scrollTo(50, "center-force");
+  virtualScroll.value.scrollTo(0);
+});
+
+watch(tapeDirection, (newTapeDirection) => {
+  if (newTapeDirection === "oneWay") {
+    virtualScroll.value.scrollTo(0);
+  } else {
+    virtualScroll.value.scrollTo(Math.floor(maxSize / 2), "center-force");
+  }
 });
 </script>
 
 <style>
-.cell {
+/* .cell {
   border: 1px solid black;
-}
+} */
 </style>
