@@ -1,8 +1,16 @@
 <template>
+  <div class="text-h3 q-pt-xl text-weight-light full-width text-center">
+    <slot name="title"></slot>
+  </div>
+  <div class="q-gutter-sm q-pt-md">
+    <q-radio v-model="shape" val="line" label="One way tape" />
+    <q-radio v-model="shape" val="rectangle" label="Two ways tape" />
+  </div>
   <q-virtual-scroll
     :items="heavyList"
     virtual-scroll-horizontal
     v-slot="{ item, index }"
+    ref="virtualScroll"
   >
     <div
       :key="index"
@@ -15,7 +23,9 @@
   </q-virtual-scroll>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from "vue";
+
 const maxSize = 100;
 const heavyList = [];
 
@@ -24,14 +34,11 @@ for (let i = 0; i < maxSize; i++) {
     class: "q-pa-md self-center ",
   });
 }
+const virtualScroll = ref(null);
 
-export default {
-  setup() {
-    return {
-      heavyList,
-    };
-  },
-};
+onMounted(() => {
+  virtualScroll.value.scrollTo(50, "center-force");
+});
 </script>
 
 <style>

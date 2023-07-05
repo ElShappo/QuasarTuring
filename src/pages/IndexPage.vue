@@ -1,6 +1,5 @@
 <template>
   <q-page class="row justify-center items-center content-start bg-white">
-    <div class="text-h3 text-weight-light q-py-xl">Tape</div>
     <TapeComponent>
       <template v-slot:title>Tape</template>
     </TapeComponent>
