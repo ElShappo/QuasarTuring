@@ -89,13 +89,13 @@ watch(tapeDirection, (newTapeDirection) => {
   if (newTapeDirection === "oneWay") {
     virtualScroll.value.scrollTo(0);
   } else {
-    virtualScroll.value.scrollTo(Math.floor(maxSize / 2), "center-force");
+    virtualScroll.value.scrollTo(Math.floor(maxSize / 2), "start-force");
   }
 });
 </script>
 
 <style>
-/* .cell {
-  border: 1px solid black;
-} */
+.cell {
+  border: 1px solid rgb(0, 0, 0);
+}
 </style>
