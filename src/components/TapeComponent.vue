@@ -97,7 +97,7 @@ onMounted(() => {
 
   document.addEventListener("click", (event) => {
     if (!event.target.closest(".q-virtual-scroll__content") && cell) {
-      cell.innerHTML = input.value;
+      cell.textContent = input.value;
       cell.classList.add("text-weight-light");
       input.remove();
     }
@@ -105,7 +105,7 @@ onMounted(() => {
 
   virtualScrollElement.addEventListener("click", (event) => {
     if (cell) {
-      cell.innerHTML = input.value;
+      cell.textContent = input.value;
       cell.classList.add("text-weight-light");
       input.remove();
     }
@@ -120,7 +120,7 @@ onMounted(() => {
       // do nothing, already at position
     }
 
-    let content = cell.innerHTML;
+    let content = cell.textContent;
 
     input = document.createElement("input");
     input.style.width = cell.parentNode.clientWidth / 2 + "px";
@@ -128,7 +128,7 @@ onMounted(() => {
     input.classList.add("text-center", "text-weight-light");
     input.value = content;
 
-    cell.innerHTML = "";
+    cell.textContent = "";
     cell.appendChild(input);
 
     input.focus();
