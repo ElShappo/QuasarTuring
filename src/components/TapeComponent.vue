@@ -50,10 +50,14 @@
     <div
       :key="index"
       :class="item.class"
-      class="text-h4 text-weight-thin text-grey cell q-px-lg text-center"
+      class="virtual-scroll-cell text-h4 text-weight-thin text-grey cell q-px-lg text-center"
+      :tabindex="index + 1"
     >
-      <div>λ</div>
-      <div v-if="isIndex && tapeDirection === 'oneWay'" class="text-subtitle2">
+      <div class="virtual-scroll-cell-content">λ</div>
+      <div
+        v-if="isIndex && tapeDirection === 'oneWay'"
+        class="virtual-scroll-cell-index text-subtitle2"
+      >
         {{ index }}
       </div>
       <div
@@ -81,8 +85,56 @@ const virtualScroll = ref(null);
 const tapeDirection = ref("oneWay");
 const isIndex = ref(true);
 
+let cell = null;
+let input = null;
+
 onMounted(() => {
   virtualScroll.value.scrollTo(0);
+
+  let virtualScrollElement = document.querySelector(
+    ".q-virtual-scroll__content"
+  );
+
+  virtualScrollElement.addEventListener("click", (event) => {
+    if (cell) {
+      cell.innerHTML = input.value;
+      input.remove();
+    }
+
+    cell = event.target; // identify in which cell we are located at
+
+    if (cell.classList.contains("virtual-scroll-cell")) {
+      cell = cell.querySelector(".virtual-scroll-cell-content"); // go to cell content
+    } else if (cell.classList.contains("virtual-scroll-cell-index")) {
+      cell = cell.previousElementSibling; // go to virtual-scroll-cell-content div
+    } else {
+      // do nothing, already at position
+    }
+
+    let content = cell.innerHTML;
+
+    input = document.createElement("input");
+    input.style.width = cell.parentNode.clientWidth / 2 + "px";
+    input.style.height = cell.clientHeight + "px";
+    input.classList.add("text-center", "text-weight-light");
+    input.value = content;
+
+    cell.innerHTML = "";
+    cell.appendChild(input);
+    input.focus();
+
+    input.addEventListener("input", (event) => {
+      if (input.value.length > 1) {
+        input.value = input.value[0];
+      }
+    });
+
+    input.addEventListener("change", (event) => {
+      if (input.value.length === 0) {
+        input.value = "λ";
+      }
+    });
+  });
 });
 
 watch(tapeDirection, (newTapeDirection) => {
