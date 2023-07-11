@@ -50,7 +50,7 @@
     <div
       :key="index"
       :class="item.class"
-      class="virtual-scroll-cell text-h4 text-weight-thin text-grey cell q-px-lg text-center"
+      class="virtual-scroll-cell text-h4 text-weight-thin text-grey q-px-lg text-center row justify-center"
       :tabindex="index + 1"
     >
       <div class="virtual-scroll-cell-content">λ</div>
@@ -95,9 +95,18 @@ onMounted(() => {
     ".q-virtual-scroll__content"
   );
 
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".q-virtual-scroll__content") && cell) {
+      cell.innerHTML = input.value;
+      cell.classList.add("text-weight-light");
+      input.remove();
+    }
+  });
+
   virtualScrollElement.addEventListener("click", (event) => {
     if (cell) {
       cell.innerHTML = input.value;
+      cell.classList.add("text-weight-light");
       input.remove();
     }
 
@@ -121,6 +130,7 @@ onMounted(() => {
 
     cell.innerHTML = "";
     cell.appendChild(input);
+
     input.focus();
     input.select();
 
@@ -133,6 +143,10 @@ onMounted(() => {
     input.addEventListener("change", (event) => {
       if (input.value.length === 0) {
         input.value = "λ";
+      } else {
+        if (input.value !== "λ") {
+          input.parentNode.classList.add("not-lambda");
+        }
       }
     });
   });
@@ -148,7 +162,12 @@ watch(tapeDirection, (newTapeDirection) => {
 </script>
 
 <style>
-.cell {
+.virtual-scroll-cell {
   border: 1px solid rgb(0, 0, 0);
+  width: 2em;
+}
+
+.virtual-scroll-cell-content.not-lambda {
+  color: black;
 }
 </style>
