@@ -50,7 +50,7 @@
     <div
       :key="index"
       :class="item.class"
-      class="virtual-scroll-cell text-h4 text-weight-thin text-grey q-px-lg text-center row justify-center"
+      class="virtual-scroll-cell text-h4 text-weight-thin text-grey q-px-lg text-center row justify-center items-center"
       :tabindex="index + 1"
     >
       <div class="virtual-scroll-cell-content">λ</div>
@@ -123,7 +123,7 @@ onMounted(() => {
     let content = cell.textContent;
 
     input = document.createElement("input");
-    input.style.width = cell.parentNode.clientWidth / 2 + "px";
+    input.style.width = cell.parentNode.clientWidth / 1.5 + "px";
     input.style.height = cell.clientHeight + "px";
     input.classList.add("text-center", "text-weight-light");
     input.value = content;
@@ -159,12 +159,39 @@ watch(tapeDirection, (newTapeDirection) => {
     virtualScroll.value.scrollTo(Math.floor(maxSize / 2), "start-force");
   }
 });
+
+watch(isIndex, (newState) => {
+  let virtualScrollCells = document.querySelectorAll(".virtual-scroll-cell");
+
+  for (let virtualScrollCell of virtualScrollCells) {
+    if (newState) {
+      virtualScrollCell.classList.toggle("with-index");
+      if (virtualScrollCell.classList.contains("no-index")) {
+        virtualScrollCell.classList.remove("no-index");
+      }
+    } else {
+      virtualScrollCell.classList.toggle("no-index");
+      if (virtualScrollCell.classList.contains("with-index")) {
+        virtualScrollCell.classList.remove("with-index");
+      }
+    }
+  }
+});
 </script>
 
 <style>
 .virtual-scroll-cell {
   border: 1px solid rgb(0, 0, 0);
   width: 2em;
+  height: 3em;
+}
+
+.virtual-scroll-cell.no-index {
+  height: 2.5em;
+}
+
+.virtual-scroll-cell.with-index {
+  height: 3em;
 }
 
 .virtual-scroll-cell-content.not-lambda {
