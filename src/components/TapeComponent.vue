@@ -122,6 +122,7 @@ onMounted(() => {
     cell.innerHTML = "";
     cell.appendChild(input);
     input.focus();
+    input.select();
 
     input.addEventListener("input", (event) => {
       if (input.value.length > 1) {
